@@ -46,13 +46,25 @@ class ForumController extends Controller
     public function postQuestion(Request $request)
     {
         $this->validate($request, $this->rules);
+	
+	//handle script and php tags
+        $body = $request['body'];
+        $doc = new \DOMDocument();
+        $doc->loadHTML($body);
+        $script_tags = $doc->getElementsByTagName('script');
+        $length = $script_tags->length;
+        for ($i = 0; $i < $length; $i++) {
+          $script_tags->item($i)->parentNode->removeChild($script_tags->item($i));
+        }
+        $body = $doc->saveHTML();
+        $body = preg_replace('/^<\?php(.*)(\?>)?$/s', '$1', $body);
 
     	$post = new Post();
 
         $post->user_id = Auth::user()->id;
     	$post->category_id = $request['category'];
         $post->title = $request['title'];
-        $post->body = $request['body'];
+        $post->body = $body;
 
         $post->save();
 
