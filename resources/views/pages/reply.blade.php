@@ -11,7 +11,7 @@
           <div class="media-body">
             <h4 class="media-heading">{{ $post->title }}</h4>
             <p class="text-right">By : {{ $post->user->name }}</p>
-            <p>{{ $post->body }}</p>
+            <p><?php echo $post->body; ?></p>
             <ul class="list-inline list-unstyled">
               <li><span><i class="glyphicon glyphicon-calendar"></i> {{ $post->created_at->diffForHumans()}}</span></li>
             </ul>
